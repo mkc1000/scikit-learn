@@ -1182,7 +1182,7 @@ cdef class BinaryTree:
 
     def query(self, X, k=1, return_distance=True,
               dualtree=False, breadth_first=False,
-              sort_results=True):
+              sort_results=True, ready_dualtree=None):
         """
         query(X, k=1, return_distance=True,
               dualtree=False, breadth_first=False)
@@ -1258,8 +1258,11 @@ cdef class BinaryTree:
         self.n_splits = 0
 
         if dualtree:
-            other = self.__class__(np_Xarr, metric=self.dist_metric,
-                                   leaf_size=self.leaf_size)
+            if ready_dualtree is None:
+                other = self.__class__(np_Xarr, metric=self.dist_metric,
+                                       leaf_size=self.leaf_size)
+            else:
+                other = ready_dualtree
             if breadth_first:
                 self._query_dual_breadthfirst(other, heap, nodeheap)
             else:
